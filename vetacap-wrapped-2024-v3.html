@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VetaCap · Resumen Anual 2024</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green:   #5df5a8;
+  --amber:   #ffc94d;
+  --coral:   #ff7f5e;
+  --blue:    #60a5fa;
+  --purple:  #b197fc;
+  --rose:    #fb7185;
+  --teal:    #2dd4bf;
+  --bg:      #09090f;
+  --card:    #111119;
+  --card2:   #0f0f1c;
+  --border:  rgba(255,255,255,0.07);
+  --muted:   rgba(240,240,255,0.42);
+  --text:    #eeeef8;
+  --font-b:  'DM Sans', sans-serif;
+  --font-d:  'DM Sans', sans-serif;
+  --font-n:  'DM Mono', 'Courier New', monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-b);
+  padding: 2rem 1rem 5rem;
+  line-height: 1.5;
+}
+
+/* ── DOWNLOAD ── */
+#dl-btn {
+  position: fixed;
+  top: 1.2rem; right: 1.2rem;
+  z-index: 9999;
+  background: var(--green);
+  color: #021a0b;
+  border: none;
+  border-radius: 999px;
+  padding: 0.6rem 1.3rem;
+  font-family: var(--font-b);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 7px;
+  box-shadow: 0 0 28px rgba(93,245,168,0.3);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+#dl-btn:hover { transform: scale(1.05); box-shadow: 0 0 38px rgba(93,245,168,0.45); }
+#dl-btn:active { transform: scale(0.97); }
+#dl-btn svg { width:14px; height:14px; flex-shrink:0; }
+
+/* ── WRAP ── */
+.wrap { max-width: 660px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.1rem; }
+
+/* ── SLIDES ── */
+.slide {
+  border-radius: 22px;
+  padding: 1.9rem 1.9rem 1.7rem;
+  position: relative;
+  overflow: hidden;
+}
+.s-hero   { background: #0a0a18; border: 1px solid rgba(93,245,168,0.13); }
+.s-green  { background: #050f09; border: 1px solid rgba(93,245,168,0.11); }
+.s-dark   { background: #0d0d17; border: 1px solid var(--border); }
+.s-amber  { background: #110900; border: 1px solid rgba(255,201,77,0.11); }
+.s-blue   { background: #060d1c; border: 1px solid rgba(96,165,250,0.11); }
+.s-purple { background: #0c0916; border: 1px solid rgba(177,151,252,0.11); }
+.s-rose   { background: #140810; border: 1px solid rgba(251,113,133,0.11); }
+.s-teal   { background: #041110; border: 1px solid rgba(45,212,191,0.11); }
+.s-mid    { background: var(--card); border: 1px solid var(--border); }
+
+/* blobs */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(55px);
+  pointer-events: none;
+  opacity: 0.17;
+}
+
+/* ── TYPE ── */
+.tag {
+  font-family: var(--font-b);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.55rem;
+}
+.slide-title {
+  font-family: var(--font-b);
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 1.15rem;
+}
+.big-n {
+  font-family: var(--font-n);
+  font-size: 52px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+.big-lbl { font-family: var(--font-b); font-size: 13px; color: var(--muted); margin-top: 0.5rem; letter-spacing: 0.01em; }
+
+.c-green  { color: var(--green); }
+.c-amber  { color: var(--amber); }
+.c-coral  { color: var(--coral); }
+.c-blue   { color: var(--blue); }
+.c-purple { color: var(--purple); }
+.c-rose   { color: var(--rose); }
+.c-teal   { color: var(--teal); }
+.c-muted  { color: var(--muted); }
+
+/* ── DIVIDER ── */
+.div { height: 1px; background: var(--border); margin: 1rem 0; }
+
+/* ── GRIDS ── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.7rem; }
+.g4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.65rem; }
+
+/* ── STAT MINI ── */
+.sm {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 0.85rem 0.9rem;
+}
+.sm-val { font-family: var(--font-n); font-size: 22px; font-weight: 500; letter-spacing: -0.3px; }
+.sm-lbl { font-family: var(--font-b); font-size: 11px; color: var(--muted); margin-top: 5px; letter-spacing: 0.02em; }
+
+/* ── HERO ── */
+.hero-year {
+  font-family: var(--font-n);
+  font-size: 96px;
+  font-weight: 500;
+  line-height: 0.9;
+  color: var(--green);
+  letter-spacing: -3px;
+}
+.hero-title { font-family: var(--font-b); font-size: 23px; font-weight: 600; margin-top: 0.5rem; }
+.hero-sub   { font-family: var(--font-b); font-size: 13px; color: var(--muted); margin-top: 0.2rem; font-weight: 300; }
+.logo-txt   { font-family: var(--font-b); font-weight: 700; font-size: 12px; letter-spacing: 0.2em; color: var(--muted); }
+.hero-stats { display: flex; gap: 1.75rem; margin-top: 1.75rem; flex-wrap: wrap; }
+.hs-lbl     { font-family: var(--font-b); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.hs-val     { font-family: var(--font-n); font-size: 20px; font-weight: 500; margin-top: 3px; letter-spacing: -0.3px; }
+
+/* ── BARS ── */
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.bar-lbl  { font-size: 12px; width: 105px; flex-shrink: 0; color: var(--muted); }
+.bar-trk  { flex: 1; background: rgba(255,255,255,0.055); border-radius: 99px; height: 7px; }
+.bar-fill { height: 7px; border-radius: 99px; }
+.bar-val  { font-family: var(--font-n); font-size: 12px; font-weight: 500; width: 40px; text-align: right; flex-shrink: 0; letter-spacing: -0.2px; }
+
+/* ── RANK ── */
+.rk-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.rk-num { font-family: var(--font-n); font-size: 11px; font-weight: 400; width: 18px; color: var(--muted); }
+.rk-name { font-size: 13px; flex: 1; }
+.rk-tick { font-size: 10.5px; color: var(--muted); margin-left: 4px; }
+.rk-bw   { width: 96px; background: rgba(255,255,255,0.055); border-radius: 99px; height: 5px; }
+.rk-bf   { height: 5px; border-radius: 99px; }
+.rk-val  { font-family: var(--font-n); font-size: 13px; font-weight: 500; width: 52px; text-align: right; flex-shrink: 0; letter-spacing: -0.2px; }
+
+/* ── PILL ── */
+.pill {
+  display: inline-block;
+  padding: 3px 11px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-b);
+  letter-spacing: 0.03em;
+}
+.pill-g  { background: rgba(93,245,168,0.13); color: var(--green); }
+.pill-p  { background: rgba(177,151,252,0.13); color: var(--purple); }
+.pill-a  { background: rgba(255,201,77,0.13);  color: var(--amber); }
+.pill-b  { background: rgba(96,165,250,0.13);  color: var(--blue); }
+.pill-r  { background: rgba(251,113,133,0.13); color: var(--rose); }
+.pill-t  { background: rgba(45,212,191,0.13);  color: var(--teal); }
+
+/* ── TIMELINE ── */
+.tl-wrap { position: relative; }
+.tl-row  { display: flex; align-items: flex-start; gap: 13px; padding-bottom: 16px; position: relative; }
+.tl-line { position: absolute; left: 4px; top: 14px; bottom: 0; width: 1px; background: var(--border); }
+.tl-dot  { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+.tl-mo   { font-family: var(--font-b); font-size: 10px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); font-weight: 600; }
+.tl-txt  { font-size: 13px; margin-top: 3px; line-height: 1.5; }
+
+/* ── SCORE ── */
+.score-ring {
+  width: 96px; height: 96px;
+  border-radius: 50%;
+  border: 2.5px solid var(--green);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.score-val  { font-family: var(--font-n); font-size: 28px; font-weight: 500; color: var(--green); letter-spacing: -0.5px; }
+.score-lbl2 { font-family: var(--font-b); font-size: 9px; letter-spacing: 0.13em; color: var(--muted); margin-top: 2px; }
+
+/* ── ARCHETYPE CARD ── */
+.arch-card {
+  background: rgba(177,151,252,0.06);
+  border: 1px solid rgba(177,151,252,0.18);
+  border-radius: 16px;
+  padding: 1.2rem 1.3rem;
+  margin-bottom: 1rem;
+}
+.arch-icon { font-size: 28px; margin-bottom: 0.4rem; }
+.arch-name { font-family: var(--font-b); font-size: 20px; font-weight: 700; color: var(--purple); }
+.arch-desc { font-size: 13px; color: var(--muted); margin-top: 0.4rem; line-height: 1.55; }
+
+/* ── PHASES ── */
+.phase-row { display: flex; gap: 0.7rem; margin-bottom: 0; }
+.phase-card {
+  flex: 1;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 0.85rem 0.9rem;
+}
+.phase-range  { font-family: var(--font-b); font-size: 10px; color: var(--muted); letter-spacing: 0.07em; text-transform: uppercase; font-weight: 500; }
+.phase-name   { font-family: var(--font-b); font-size: 13.5px; font-weight: 600; margin: 4px 0 3px; }
+.phase-detail { font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+
+/* ── STREAK CARD ── */
+.streak-card {
+  background: rgba(255,201,77,0.05);
+  border: 1px solid rgba(255,201,77,0.16);
+  border-radius: 16px;
+  padding: 1.2rem 1.3rem;
+  display: flex; align-items: center; gap: 1.2rem;
+}
+.streak-days { font-family: var(--font-n); font-size: 46px; font-weight: 500; color: var(--amber); line-height: 1; letter-spacing: -1px; }
+.streak-unit { font-family: var(--font-b); font-size: 12px; color: var(--muted); margin-top: 4px; }
+.streak-name { font-family: var(--font-b); font-size: 17px; font-weight: 600; }
+.streak-sub  { font-size: 12.5px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+/* ── SURPRISE CARD ── */
+.surprise-card {
+  background: rgba(251,113,133,0.05);
+  border: 1px solid rgba(251,113,133,0.17);
+  border-radius: 16px;
+  padding: 1.3rem 1.4rem;
+}
+.surprise-ticker { font-family: var(--font-n); font-size: 12px; font-weight: 500; color: var(--rose); letter-spacing: 0.06em; }
+.surprise-name   { font-family: var(--font-b); font-size: 21px; font-weight: 600; margin: 4px 0; }
+.surprise-ret    { font-family: var(--font-n); font-size: 40px; font-weight: 500; color: var(--rose); line-height: 1; letter-spacing: -1px; }
+.surprise-desc   { font-family: var(--font-b); font-size: 12.5px; color: var(--muted); margin-top: 0.5rem; line-height: 1.55; }
+
+/* ── DAYS ACTIVE ── */
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(26, 1fr);
+  gap: 3px;
+  margin: 0.75rem 0;
+}
+.day-cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.05);
+}
+.day-cell.active { background: var(--green); opacity: 0.85; }
+.day-cell.active.hi { opacity: 1; }
+
+/* ── MARKET ── */
+.mkt-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.mkt-flag { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+.mkt-name { font-size: 13px; flex: 1; }
+.mkt-bw   { width: 110px; background: rgba(255,255,255,0.055); border-radius: 99px; height: 6px; }
+.mkt-bf   { height: 6px; border-radius: 99px; }
+.mkt-val  { font-family: var(--font-n); font-size: 12.5px; font-weight: 500; width: 46px; text-align: right; flex-shrink: 0; letter-spacing: -0.2px; }
+
+/* ── VS AVERAGE ── */
+.vs-wrap { display: flex; align-items: center; gap: 1rem; margin: 1rem 0; }
+.vs-bar-wrap { flex: 1; }
+.vs-label { font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+.vs-track { background: rgba(255,255,255,0.055); border-radius: 99px; height: 10px; position: relative; }
+.vs-fill  { height: 10px; border-radius: 99px; }
+.vs-mult  {
+  font-family: var(--font-n);
+  font-size: 44px;
+  font-weight: 500;
+  color: var(--teal);
+  flex-shrink: 0;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+.vs-mult-lbl { font-family: var(--font-b); font-size: 11px; color: var(--muted); margin-top: 4px; text-align: center; }
+
+/* ── CHART ── */
+.chart-wrap { position: relative; width: 100%; height: 185px; }
+
+/* ── INFO ROW ── */
+.inf { font-size: 12px; color: var(--muted); }
+.inf strong { color: var(--text); font-weight: 500; }
+
+/* ── FOOTER ── */
+.footer { font-family: var(--font-b); font-size: 10.5px; color: var(--muted); text-align: center; margin-top: 1.4rem; letter-spacing: 0.12em; font-weight: 500; text-transform: uppercase; }
+
+/* ── ANIMATIONS (screen only) ── */
+@media screen {
+  .slide { animation: fadeUp 0.5s ease both; }
+  .slide:nth-child(1)  { animation-delay: 0.05s; }
+  .slide:nth-child(2)  { animation-delay: 0.10s; }
+  .slide:nth-child(3)  { animation-delay: 0.15s; }
+  .slide:nth-child(4)  { animation-delay: 0.20s; }
+  .slide:nth-child(5)  { animation-delay: 0.25s; }
+  .slide:nth-child(6)  { animation-delay: 0.30s; }
+  .slide:nth-child(7)  { animation-delay: 0.35s; }
+  .slide:nth-child(8)  { animation-delay: 0.40s; }
+  .slide:nth-child(9)  { animation-delay: 0.45s; }
+  .slide:nth-child(10) { animation-delay: 0.50s; }
+  .slide:nth-child(11) { animation-delay: 0.55s; }
+  .slide:nth-child(12) { animation-delay: 0.60s; }
+  .slide:nth-child(13) { animation-delay: 0.65s; }
+  .slide:nth-child(14) { animation-delay: 0.70s; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+</style>
+</head>
+<body>
+
+<button id="dl-btn" onclick="downloadPDF()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+    <polyline points="7 10 12 15 17 10"/>
+    <line x1="12" y1="15" x2="12" y2="3"/>
+  </svg>
+  Descargar PDF
+</button>
+
+<div id="report" class="wrap">
+
+  <!-- 1. HERO -->
+  <div class="slide s-hero">
+    <div class="blob" style="width:340px;height:340px;background:var(--green);top:-150px;right:-100px;"></div>
+    <div class="blob" style="width:190px;height:190px;background:var(--purple);bottom:-90px;left:-60px;"></div>
+    <div class="logo-txt">VETACAP</div>
+    <div class="hero-year">2024</div>
+    <div class="hero-title">Tu año en números</div>
+    <div class="hero-sub">Resumen anual · Portfolio personalizado · Confidencial</div>
+    <div class="hero-stats">
+      <div><div class="hs-lbl">Retorno total</div><div class="hs-val c-green">+18.4%</div></div>
+      <div><div class="hs-lbl">AUM</div><div class="hs-val">$4.2M</div></div>
+      <div><div class="hs-lbl">Operaciones</div><div class="hs-val">137</div></div>
+      <div><div class="hs-lbl">Días activos</div><div class="hs-val c-green">183</div></div>
+      <div><div class="hs-lbl">Vs benchmark</div><div class="hs-val c-green">+6.1%</div></div>
+    </div>
+  </div>
+
+  <!-- 2. GRAN NÚMERO -->
+  <div class="slide s-green">
+    <div class="blob" style="width:220px;height:220px;background:var(--green);top:-90px;right:-60px;"></div>
+    <div class="tag">Rendimiento del año</div>
+    <div class="big-n c-green">+$312.450</div>
+    <div class="big-lbl">ganancia neta generada en 2024</div>
+    <div class="div"></div>
+    <div class="g2">
+      <div class="sm"><div class="sm-val c-green">+18.4%</div><div class="sm-lbl">retorno anualizado</div></div>
+      <div class="sm"><div class="sm-val">+6.1%</div><div class="sm-lbl">vs S&amp;P 500</div></div>
+    </div>
+  </div>
+
+  <!-- 3. DÍAS ACTIVOS (nuevo) -->
+  <div class="slide s-mid">
+    <div class="tag">Frecuencia operativa</div>
+    <div class="slide-title">Operaste en <span class="c-green">183 días</span> del año</div>
+
+    <!-- heatmap de semanas simplificado: 52 semanas × 5 días = mostrado como grid de ~182 celdas -->
+    <div class="days-grid" id="heatmap"></div>
+
+    <div class="div"></div>
+    <div class="g3">
+      <div class="sm"><div class="sm-val c-green">183</div><div class="sm-lbl">días con al menos 1 op.</div></div>
+      <div class="sm"><div class="sm-val">137</div><div class="sm-lbl">operaciones totales</div></div>
+      <div class="sm"><div class="sm-val c-amber">1.3</div><div class="sm-lbl">ops por día activo</div></div>
+    </div>
+    <div class="inf" style="margin-top:0.9rem;">
+      Mes con más días activos: <strong>Marzo (22)</strong> · Racha activa más larga: <strong>18 días seguidos</strong>
+    </div>
+  </div>
+
+  <!-- 4. ASSET ALLOCATION -->
+  <div class="slide s-mid">
+    <div class="tag">Composición del portfolio</div>
+    <div class="slide-title">¿Dónde estuvo tu capital?</div>
+    <div class="bar-row"><div class="bar-lbl">Renta variable</div><div class="bar-trk"><div class="bar-fill" style="width:65%;background:#3b82f6;"></div></div><div class="bar-val c-blue">65%</div></div>
+    <div class="bar-row"><div class="bar-lbl">Renta fija</div><div class="bar-trk"><div class="bar-fill" style="width:18%;background:var(--green);"></div></div><div class="bar-val c-green">18%</div></div>
+    <div class="bar-row"><div class="bar-lbl">Alternativos</div><div class="bar-trk"><div class="bar-fill" style="width:10%;background:var(--amber);"></div></div><div class="bar-val c-amber">10%</div></div>
+    <div class="bar-row"><div class="bar-lbl">Liquidez</div><div class="bar-trk"><div class="bar-fill" style="width:7%;background:#555;"></div></div><div class="bar-val c-muted">7%</div></div>
+    <div class="div"></div>
+    <div class="inf">Rebalanceo: <strong>3 veces</strong> · Duración promedio de posición: <strong>94 días</strong></div>
+  </div>
+
+  <!-- 5. TOP PERFORMERS -->
+  <div class="slide s-dark">
+    <div class="blob" style="width:160px;height:160px;background:var(--green);top:-70px;right:-40px;"></div>
+    <div class="tag">Lo más rentable</div>
+    <div class="slide-title">Tus 5 mejores posiciones</div>
+    <div class="rk-row"><div class="rk-num">1</div><div class="rk-name">Nvidia <span class="rk-tick">NVDA</span></div><div class="rk-bw"><div class="rk-bf" style="width:100%;background:var(--green);"></div></div><div class="rk-val c-green">+84.2%</div></div>
+    <div class="rk-row"><div class="rk-num">2</div><div class="rk-name">Meta <span class="rk-tick">META</span></div><div class="rk-bw"><div class="rk-bf" style="width:73%;background:var(--blue);"></div></div><div class="rk-val c-blue">+61.5%</div></div>
+    <div class="rk-row"><div class="rk-num">3</div><div class="rk-name">Berkshire <span class="rk-tick">BRK.B</span></div><div class="rk-bw"><div class="rk-bf" style="width:52%;background:var(--amber);"></div></div><div class="rk-val c-amber">+43.8%</div></div>
+    <div class="rk-row"><div class="rk-num">4</div><div class="rk-name">MercadoLibre <span class="rk-tick">MELI</span></div><div class="rk-bw"><div class="rk-bf" style="width:40%;background:var(--purple);"></div></div><div class="rk-val c-purple">+33.4%</div></div>
+    <div class="rk-row" style="margin-bottom:0;"><div class="rk-num">5</div><div class="rk-name">YPF ADR <span class="rk-tick">YPF</span></div><div class="rk-bw"><div class="rk-bf" style="width:32%;background:var(--coral);"></div></div><div class="rk-val c-coral">+26.9%</div></div>
+  </div>
+
+  <!-- 6. OPERACIONES -->
+  <div class="slide s-amber">
+    <div class="blob" style="width:200px;height:200px;background:var(--amber);top:-70px;right:-50px;"></div>
+    <div class="tag">Actividad operativa</div>
+    <div class="big-n c-amber">137</div>
+    <div class="big-lbl">operaciones ejecutadas en 2024</div>
+    <div class="div"></div>
+    <div class="g3">
+      <div class="sm"><div class="sm-val c-amber">89</div><div class="sm-lbl">compras</div></div>
+      <div class="sm"><div class="sm-val">41</div><div class="sm-lbl">ventas</div></div>
+      <div class="sm"><div class="sm-val">7</div><div class="sm-lbl">dividendos</div></div>
+    </div>
+    <div class="inf" style="margin-top:0.9rem;">Mes más activo: <strong>Marzo</strong> · Tasa de éxito: <strong style="color:var(--green);">78.4%</strong></div>
+  </div>
+
+  <!-- 7. MERCADO FAVORITO (nuevo) -->
+  <div class="slide s-blue">
+    <div class="blob" style="width:180px;height:180px;background:var(--blue);top:-70px;right:-50px;"></div>
+    <div class="tag">Tu mercado favorito</div>
+    <div class="slide-title">¿Dónde operaste más?</div>
+    <div class="mkt-row"><div class="mkt-flag">🇺🇸</div><div class="mkt-name">NYSE / NASDAQ</div><div class="mkt-bw"><div class="mkt-bf" style="width:100%;background:var(--blue);"></div></div><div class="mkt-val c-blue">58%</div></div>
+    <div class="mkt-row"><div class="mkt-flag">🇦🇷</div><div class="mkt-name">BYMA (Argentina)</div><div class="mkt-bw"><div class="mkt-bf" style="width:55%;background:var(--green);"></div></div><div class="mkt-val c-green">32%</div></div>
+    <div class="mkt-row"><div class="mkt-flag">🌐</div><div class="mkt-name">Crypto / DeFi</div><div class="mkt-bw"><div class="mkt-bf" style="width:17%;background:var(--purple);"></div></div><div class="mkt-val c-purple">10%</div></div>
+    <div class="div"></div>
+    <div class="inf">Volumen total operado: <strong>$2.84M</strong> · Instrumento más operado: <strong>CEDEAR</strong></div>
+  </div>
+
+  <!-- 8. LA APUESTA INESPERADA (nuevo) -->
+  <div class="slide s-rose">
+    <div class="blob" style="width:200px;height:200px;background:var(--rose);top:-80px;right:-60px;"></div>
+    <div class="tag">La sorpresa del año</div>
+    <div class="surprise-card">
+      <div class="surprise-ticker">YPF · ADR</div>
+      <div class="surprise-name">YPF S.A.</div>
+      <div class="surprise-ret">+26.9%</div>
+      <div class="surprise-desc">
+        Entró al portfolio en mayo con peso reducido (3.2%). 
+        Fue tu posición menos esperada y terminó siendo la 5ª más rentable del año. 
+        El timing fue clave: compraste 11 días antes del pico de volatilidad.
+      </div>
+    </div>
+    <div class="inf" style="margin-top:0.9rem;">Inversión inicial: <strong>$42.000</strong> · Ganancia realizada: <strong style="color:var(--rose);">+$11.300</strong></div>
+  </div>
+
+  <!-- 9. RACHA MÁS LARGA (nuevo) -->
+  <div class="slide s-amber">
+    <div class="blob" style="width:170px;height:170px;background:var(--amber);bottom:-70px;left:-50px;"></div>
+    <div class="tag">Tu posición más longeva</div>
+    <div class="slide-title">La que más tiempo mantuviste</div>
+    <div class="streak-card">
+      <div>
+        <div class="streak-days">247</div>
+        <div class="streak-unit">días en cartera</div>
+      </div>
+      <div>
+        <div class="streak-name">Berkshire Hathaway</div>
+        <div class="streak-sub">
+          Compraste el 14 de feb y vendiste el 19 de oct.<br>
+          Tu posición más paciente — y una de las más rentables.
+        </div>
+        <div style="margin-top:0.65rem;">
+          <span class="pill pill-a">+43.8% total</span>
+          <span class="pill pill-g" style="margin-left:5px;">Hold inteligente</span>
+        </div>
+      </div>
+    </div>
+    <div class="div"></div>
+    <div class="inf">Posición promedio en cartera: <strong>94 días</strong> · Posición más corta: <strong>3 días</strong></div>
+  </div>
+
+  <!-- 10. EVOLUCIÓN / FASES (nuevo) -->
+  <div class="slide s-purple">
+    <div class="blob" style="width:210px;height:210px;background:var(--purple);top:-80px;right:-60px;"></div>
+    <div class="tag">Tu evolución inversora</div>
+    <div class="slide-title">Tus 3 fases de 2024</div>
+    <div class="phase-row">
+      <div class="phase-card">
+        <div class="phase-range">Ene – Abr</div>
+        <div class="phase-name c-green">Modo expansión</div>
+        <div class="phase-detail">Alta exposición a tech. 68 operaciones en 4 meses. Perfil ofensivo.</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-range">May – Ago</div>
+        <div class="phase-name c-amber">Consolidación</div>
+        <div class="phase-detail">Rotación hacia renta fija y CEDEAR. Reducción de riesgo global.</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-range">Sep – Dic</div>
+        <div class="phase-name c-purple">Modo oportunista</div>
+        <div class="phase-detail">Reentrada selectiva. Máximos de retorno en oct. Cierre en récord.</div>
+      </div>
+    </div>
+    <div class="inf" style="margin-top:0.9rem;">
+      Cambio de perfil de riesgo: <strong>3 veces</strong> en el año
+    </div>
+  </div>
+
+  <!-- 11. PERFIL INVERSOR (nuevo) -->
+  <div class="slide s-purple">
+    <div class="blob" style="width:180px;height:180px;background:var(--purple);bottom:-70px;right:-50px;"></div>
+    <div class="tag">Tu arquetipo inversor</div>
+    <div class="slide-title">¿Cómo invertiste este año?</div>
+    <div class="arch-card">
+      <div class="arch-icon">♟</div>
+      <div class="arch-name">El Estratega Paciente</div>
+      <div class="arch-desc">
+        Operás con convicción y timing. No perseguís el mercado — lo anticipás. 
+        Tus posiciones largas (promedio 94 días) demuestran que preferís la rentabilidad 
+        sostenida sobre el trading de corto plazo. Cuando apostás fuerte, acertás.
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <span class="pill pill-p">Hold estratégico</span>
+      <span class="pill pill-g">Alta convicción</span>
+      <span class="pill pill-b">Diversificado</span>
+      <span class="pill pill-a">Activo pero selectivo</span>
+    </div>
+  </div>
+
+  <!-- 12. VS PROMEDIO (nuevo) -->
+  <div class="slide s-teal">
+    <div class="blob" style="width:200px;height:200px;background:var(--teal);top:-80px;right:-60px;"></div>
+    <div class="tag">Tu rendimiento vs el resto</div>
+    <div class="slide-title">¿Cómo te comparás?</div>
+    <div class="vs-wrap">
+      <div>
+        <div class="vs-mult">2.1x</div>
+        <div class="vs-mult-lbl">vs promedio VetaCap</div>
+      </div>
+      <div class="vs-bar-wrap">
+        <div class="vs-label">Promedio clientes VetaCap · +8.7%</div>
+        <div class="vs-track" style="margin-bottom:10px;"><div class="vs-fill" style="width:47%;background:rgba(255,255,255,0.2);"></div></div>
+        <div class="vs-label">Tu retorno · +18.4%</div>
+        <div class="vs-track"><div class="vs-fill" style="width:100%;background:var(--teal);"></div></div>
+      </div>
+    </div>
+    <div class="div"></div>
+    <div class="g3">
+      <div class="sm"><div class="sm-val c-teal">Top 9%</div><div class="sm-lbl">percentil de retorno</div></div>
+      <div class="sm"><div class="sm-val">+6.1%</div><div class="sm-lbl">sobre S&amp;P 500</div></div>
+      <div class="sm"><div class="sm-val c-green">+9.7%</div><div class="sm-lbl">sobre clientes VetaCap</div></div>
+    </div>
+  </div>
+
+  <!-- 13. EVOLUCIÓN MENSUAL -->
+  <div class="slide s-mid">
+    <div class="tag">Evolución patrimonial</div>
+    <div class="slide-title">Valor del portfolio mes a mes</div>
+    <div class="chart-wrap">
+      <canvas id="evoChart" role="img" aria-label="Gráfico de evolución mensual del portfolio VetaCap 2024">Evolución desde $3.5M en enero hasta $4.25M en diciembre de 2024.</canvas>
+    </div>
+  </div>
+
+  <!-- 14. TIMELINE -->
+  <div class="slide s-blue">
+    <div class="blob" style="width:180px;height:180px;background:var(--blue);top:-70px;right:-50px;"></div>
+    <div class="tag">Momentos clave</div>
+    <div class="slide-title">Tu 2024 en hitos</div>
+    <div class="tl-wrap">
+      <div class="tl-row"><div class="tl-line"></div><div class="tl-dot" style="background:var(--green);"></div><div><div class="tl-mo">Enero</div><div class="tl-txt">Apertura de nuevas posiciones en tecnología latinoamericana.</div></div></div>
+      <div class="tl-row"><div class="tl-line"></div><div class="tl-dot" style="background:var(--amber);"></div><div><div class="tl-mo">Marzo</div><div class="tl-txt">Mayor volumen operativo del año — 24 operaciones, racha activa de 18 días.</div></div></div>
+      <div class="tl-row"><div class="tl-line"></div><div class="tl-dot" style="background:var(--blue);"></div><div><div class="tl-mo">Junio</div><div class="tl-txt">Rebalanceo estratégico — inicio de la fase de consolidación.</div></div></div>
+      <div class="tl-row"><div class="tl-line"></div><div class="tl-dot" style="background:var(--rose);"></div><div><div class="tl-mo">Octubre</div><div class="tl-txt">Mejor mes del año: +4.2% en 30 días. Pico histórico de AUM.</div></div></div>
+      <div class="tl-row" style="padding-bottom:0;"><div class="tl-dot" style="background:var(--purple);"></div><div><div class="tl-mo">Diciembre</div><div class="tl-txt">Cierre en máximos. Score A+ · Top 9% de clientes VetaCap.</div></div></div>
+    </div>
+  </div>
+
+  <!-- 15. SCORE FINAL -->
+  <div class="slide s-hero">
+    <div class="blob" style="width:280px;height:280px;background:var(--purple);bottom:-120px;right:-90px;"></div>
+    <div class="blob" style="width:160px;height:160px;background:var(--green);top:-70px;left:-50px;"></div>
+    <div class="tag">Evaluación anual</div>
+    <div style="display:flex;align-items:center;gap:1.4rem;margin:1rem 0 1.4rem;">
+      <div class="score-ring">
+        <div class="score-val">A+</div>
+        <div class="score-lbl2">SCORE</div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-b);font-size:19px;font-weight:600;">Portfolio de alto rendimiento</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px;">Superaste al 91% de los clientes VetaCap</div>
+        <div style="margin-top:0.7rem;display:flex;gap:7px;flex-wrap:wrap;">
+          <span class="pill pill-g">Top 9% del año</span>
+          <span class="pill pill-p">El Estratega Paciente</span>
+        </div>
+      </div>
+    </div>
+    <div class="g4">
+      <div class="sm"><div class="sm-val">1.82</div><div class="sm-lbl">Sharpe Ratio</div></div>
+      <div class="sm"><div class="sm-val c-coral">-8.3%</div><div class="sm-lbl">Max Drawdown</div></div>
+      <div class="sm"><div class="sm-val">0.74</div><div class="sm-lbl">Beta vs mkt</div></div>
+      <div class="sm"><div class="sm-val c-green">183</div><div class="sm-lbl">días activos</div></div>
+    </div>
+    <div class="footer">VETACAP · RESUMEN 2024 · CONFIDENCIAL</div>
+  </div>
+
+</div><!-- /report -->
+
+<script>
+// ── HEATMAP de días activos ──
+(function() {
+  const container = document.getElementById('heatmap');
+  // Simulamos 365 días. 183 activos distribuidos con clusters realistas.
+  const total = 365;
+  const activeDays = new Set();
+  // semanas activas concentradas en ciertos meses
+  const clusters = [
+    [14,40],[55,90],[95,115],[130,160],[175,200],[215,240],[255,285],[300,330],[345,365]
+  ];
+  clusters.forEach(([s,e]) => {
+    for (let i = s; i < e; i++) {
+      if (activeDays.size < 183 && Math.random() > 0.35) activeDays.add(i);
+    }
+  });
+  // fill to 183
+  for (let i = 0; i < total && activeDays.size < 183; i++) {
+    if (Math.random() > 0.6) activeDays.add(i);
+  }
+
+  // show 2 rows of 26 = 52 weeks compressed visual
+  for (let w = 0; w < 52; w++) {
+    const cell = document.createElement('div');
+    cell.className = 'day-cell';
+    // check if any of the 7 days in this week is active
+    const weekStart = w * 7;
+    let hasActive = false, hasHi = false;
+    for (let d = weekStart; d < weekStart + 7; d++) {
+      if (activeDays.has(d)) { hasActive = true; }
+    }
+    // count actives in week
+    let cnt = 0;
+    for (let d = weekStart; d < weekStart + 7; d++) { if (activeDays.has(d)) cnt++; }
+    if (hasActive) cell.classList.add('active');
+    if (cnt >= 4)  cell.classList.add('hi');
+    container.appendChild(cell);
+  }
+  // second row
+  for (let w = 0; w < 52; w++) {
+    const cell = document.createElement('div');
+    cell.className = 'day-cell';
+    const weekStart = w * 7;
+    let cnt = 0;
+    for (let d = weekStart; d < weekStart + 7; d++) { if (activeDays.has(d)) cnt++; }
+    if (cnt >= 2) cell.classList.add('active');
+    if (cnt >= 5) cell.classList.add('hi');
+    container.appendChild(cell);
+  }
+})();
+
+// ── CHART ──
+(function() {
+  const ctx = document.getElementById('evoChart').getContext('2d');
+  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const vals   = [3500,3580,3720,3690,3810,3760,3890,3940,4010,4180,4110,4250];
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'Portfolio',
+        data: vals,
+        borderColor: '#5df5a8',
+        backgroundColor: 'rgba(93,245,168,0.06)',
+        borderWidth: 2,
+        pointRadius: 3.5,
+        pointBackgroundColor: '#5df5a8',
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: c => '$' + c.parsed.y.toLocaleString('es-AR') + 'k' } }
+      },
+      scales: {
+        x: {
+          ticks: { font: { size: 10.5 }, color: 'rgba(240,240,255,0.38)', autoSkip: false, maxRotation: 0 },
+          grid: { display: false }, border: { display: false }
+        },
+        y: {
+          ticks: { font: { size: 10.5 }, color: 'rgba(240,240,255,0.38)', callback: v => '$' + (v/1000).toFixed(1) + 'M' },
+          grid: { color: 'rgba(255,255,255,0.035)' }, border: { display: false }
+        }
+      }
+    }
+  });
+})();
+
+// ── PDF ──
+function downloadPDF() {
+  const btn = document.getElementById('dl-btn');
+  btn.textContent = 'Generando PDF…';
+  btn.style.opacity = '0.65';
+  btn.style.pointerEvents = 'none';
+
+  const el = document.getElementById('report');
+  html2pdf().set({
+    margin:      [0,0,0,0],
+    filename:    'VetaCap-Resumen-2024.pdf',
+    image:       { type: 'jpeg', quality: 0.97 },
+    html2canvas: { scale: 2, backgroundColor: '#09090f', useCORS: true, logging: false },
+    jsPDF:       { unit: 'px', format: [660, 8200], orientation: 'portrait' }
+  }).from(el).save().then(() => {
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Descargar PDF`;
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+  });
+}
+</script>
+</body>
+</html>
